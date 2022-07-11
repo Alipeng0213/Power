@@ -1,17 +1,16 @@
-package com.family.auth.common;
+package com.family.auth.oauth.conf;
 
+import com.family.auth.oauth.core.UsernamePasswordProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * @Description TODO
@@ -20,25 +19,31 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  */
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConf extends WebSecurityConfigurerAdapter {
+
+    private static final String[] PERMIT_PATHS = {
+            "/oauth/**",
+            "/login/**",
+            "/logout/**"
+    };
+
+    private final static String LOGIN_PAGE = "/login";
+
 
     @Bean
     @Override
-    protected UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user_1").password("123456").authorities("USER").build());
-        manager.createUser(User.withUsername("user_2").password("123456").authorities("USER").build());
-        return manager;
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
-        http.requestMatchers().anyRequest()
+        http
+                .requestMatchers().anyRequest()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/oauth/*")
-                .permitAll();
+                .antMatchers("/oauth/*").permitAll();
         // @formatter:on
     }
 
@@ -50,14 +55,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * @throws Exception
      */
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication() //认证信息存储到内存中
-                .passwordEncoder(passwordEncoder())
-                .withUser("user_1").password(passwordEncoder().encode("123456")).roles("ADMIN");
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
     }
 
-    private PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+
+    @Bean
+    public UsernamePasswordProvider authenticationProvider(){
+        return new UsernamePasswordProvider();
     }
 
 }
