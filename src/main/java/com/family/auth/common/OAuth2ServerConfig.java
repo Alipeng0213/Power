@@ -1,4 +1,4 @@
-package com.example.power.common;
+package com.family.auth.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

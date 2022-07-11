@@ -1,4 +1,4 @@
-package com.example.power.common;
+package com.family.auth.common;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 

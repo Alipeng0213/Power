@@ -1,4 +1,4 @@
-package com.example.power.common;
+package com.family.auth.common;
 
 /**
  * @Description TODO

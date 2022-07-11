@@ -1,4 +1,4 @@
-package com.example.power.controller;
+package com.family.auth.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
