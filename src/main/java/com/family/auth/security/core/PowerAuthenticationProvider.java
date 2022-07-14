@@ -1,6 +1,8 @@
-package com.family.auth.oauth.core;
+package com.family.auth.security.core;
 
 
+import com.sun.security.auth.UserPrincipal;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -9,12 +11,16 @@ import org.springframework.security.core.AuthenticationException;
 import java.util.Collections;
 
 
-public class UsernamePasswordProvider implements AuthenticationProvider {
+@Configuration
+public class PowerAuthenticationProvider implements AuthenticationProvider {
 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        return new UsernamePasswordAuthenticationToken("123", "222", Collections.EMPTY_LIST);
+        String principal = (String) authentication.getPrincipal();
+        String password = (String) authentication.getCredentials();
+        UserPrincipal userPrincipal = new UserPrincipal(principal);
+        return new PluginAuthenticationToken(userPrincipal, Collections.EMPTY_LIST);
     }
 
     @Override

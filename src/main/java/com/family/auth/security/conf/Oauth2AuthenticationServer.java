@@ -1,11 +1,11 @@
-package com.family.auth.oauth.conf;
+package com.family.auth.security.conf;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.family.auth.security.oauth2.JwtEnhancer;
+import com.family.auth.security.oauth2.JwtStore;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -28,6 +28,9 @@ class Oauth2AuthenticationServer extends AuthorizationServerConfigurerAdapter {
     @Resource
     AuthenticationManager authenticationManager;
 
+    @Resource
+    JwtStore jwtStore;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         //配置两个客户端,一个用于password认证一个用于client认证
@@ -41,7 +44,17 @@ class Oauth2AuthenticationServer extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(jwtStore);
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
+        tokenServices.setTokenEnhancer(new JwtEnhancer());
+        tokenServices.setAccessTokenValiditySeconds(5 * 60 * 60 * 12);// token有效期设置
+        tokenServices.setRefreshTokenValiditySeconds(5 * 60 * 60 * 12);// Refresh_token
+        tokenServices.setAuthenticationManager(authenticationManager);
+
         endpoints.pathMapping("/oauth/token", "/connect/token")
+                .tokenServices(tokenServices)
                 .authenticationManager(authenticationManager)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }

@@ -1,6 +1,7 @@
-package com.family.auth.oauth.conf;
+package com.family.auth.security.conf;
 
-import com.family.auth.oauth.core.UsernamePasswordProvider;
+import com.family.auth.security.core.PowerAuthenticationProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +10,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+
+import javax.annotation.Resource;
 
 /**
  * @Description TODO
@@ -23,11 +25,19 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 
     private static final String[] PERMIT_PATHS = {
             "/oauth/**",
-            "/login/**",
+            "/login**",
+            "/sign/**",
             "/logout/**"
     };
 
-    private final static String LOGIN_PAGE = "/login";
+
+
+    private final static String LOGIN_PAGE = "/sign/login";
+
+    @Resource
+    PowerAuthenticationProvider powerAuthenticationProvider;
+    @Resource
+    ObjectMapper objectMapper;
 
 
     @Bean
@@ -39,11 +49,12 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
-        http
-                .requestMatchers().anyRequest()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/oauth/*").permitAll();
+        http.csrf().disable().cors()
+                .and().formLogin().loginPage(LOGIN_PAGE)
+                .and().requestMatchers().anyRequest()
+                .and().authorizeRequests().antMatchers("/oauth/*").permitAll()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().headers().cacheControl();
         // @formatter:on
     }
 
@@ -56,13 +67,8 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
+        auth.authenticationProvider(powerAuthenticationProvider);
     }
 
-
-    @Bean
-    public UsernamePasswordProvider authenticationProvider(){
-        return new UsernamePasswordProvider();
-    }
 
 }
