@@ -5,6 +5,10 @@ public class Constant {
 
     static final String TOKEN = "token";
 
+    static final String USER = "user";
+
+    static final String EXPIRATION = "expiration";
+
     static final String CLIENT_ID = "clientId";
 
 }

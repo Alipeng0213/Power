@@ -25,6 +25,7 @@ public class JwtUtils {
                 .claim("id", 123)
                 .setIssuedAt(new Date())
                 .claim("clientId", clientId)
+                .claim("clientIsss", 222)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
                 .signWith(SignatureAlgorithm.HS256, APPSECRET).compact();
         return token;

@@ -2,30 +2,30 @@ package com.family.auth.core;
 
 public class ApiResult<T> {
 
-    private int statusCode;
+    private int code;
     private String message;
-    private T result;
+    private T data;
 
     public ApiResult() { }
 
-    public ApiResult(int statusCode, String message) {
-        this.statusCode = statusCode;
+    public ApiResult(int code, String message) {
+        this.code = code;
         this.message = message;
-        this.result = null;
+        this.data = null;
     }
 
-    public ApiResult(int statusCode, String message, T result) {
-        this.statusCode = statusCode;
+    public ApiResult(int code, String message, T data) {
+        this.code = code;
         this.message = message;
-        this.result = result;
+        this.data = data;
     }
 
-    public int getStatusCode() {
-        return statusCode;
+    public int getCode() {
+        return code;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMessage() {
@@ -36,11 +36,11 @@ public class ApiResult<T> {
         this.message = message;
     }
 
-    public T getResult() {
-        return result;
+    public T getData() {
+        return data;
     }
 
-    public void setResult(T result) {
-        this.result = result;
+    public void setData(T data) {
+        this.data = data;
     }
 }

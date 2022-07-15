@@ -38,7 +38,7 @@ public class ApiResultFactory {
 
     public static ApiResult InvalidToken(String message) {
         ApiResult result = new ApiResult(50100, message);
-        result.setResult(message);
+        result.setData(message);
         return result;
     }
 
