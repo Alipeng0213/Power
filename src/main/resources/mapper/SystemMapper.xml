@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.family.auth.mvc.mapper.SystemMapper">
+  <resultMap id="BaseResultMap" type="com.family.auth.model.System">
+    <id column="Fid" jdbcType="INTEGER" property="fid" />
+    <result column="Fname" jdbcType="VARCHAR" property="fname" />
+    <result column="Fdescription" jdbcType="VARCHAR" property="fdescription" />
+    <result column="Furl" jdbcType="VARCHAR" property="furl" />
+    <result column="Fclient_id" jdbcType="VARCHAR" property="fclientId" />
+    <result column="Fclient_secret" jdbcType="VARCHAR" property="fclientSecret" />
+    <result column="Fredirect_urls" jdbcType="VARCHAR" property="fredirectUrls" />
+    <result column="Fimportance" jdbcType="INTEGER" property="fimportance" />
+    <result column="Fcreate_time" jdbcType="TIMESTAMP" property="fcreateTime" />
+    <result column="Fcreator" jdbcType="VARCHAR" property="fcreator" />
+    <result column="Fmodify_time" jdbcType="TIMESTAMP" property="fmodifyTime" />
+    <result column="Fdeveloper" jdbcType="VARCHAR" property="fdeveloper" />
+    <result column="Fstate" jdbcType="INTEGER" property="fstate" />
+    <result column="Freason" jdbcType="VARCHAR" property="freason" />
+    <result column="Ftwice_login_enabled" jdbcType="INTEGER" property="ftwiceLoginEnabled" />
+    <result column="Fexpire_notify" jdbcType="INTEGER" property="fexpireNotify" />
+    <result column="Fcheck_enabled" jdbcType="INTEGER" property="fcheckEnabled" />
+    <result column="Fsign" jdbcType="VARCHAR" property="fsign" />
+    <result column="Fbackup_auditor" jdbcType="VARCHAR" property="fbackupAuditor" />
+    <result column="Foa_enabled" jdbcType="INTEGER" property="foaEnabled" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_system
+    where Fid = #{fid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.family.auth.model.System">
+    insert into t_system (Fid, Fname, Fdescription, 
+      Furl, Fclient_id, Fclient_secret, 
+      Fredirect_urls, Fimportance, Fcreate_time, 
+      Fcreator, Fmodify_time, Fdeveloper, 
+      Fstate, Freason, Ftwice_login_enabled, 
+      Fexpire_notify, Fcheck_enabled, Fsign, 
+      Fbackup_auditor, Foa_enabled)
+    values (#{fid,jdbcType=INTEGER}, #{fname,jdbcType=VARCHAR}, #{fdescription,jdbcType=VARCHAR}, 
+      #{furl,jdbcType=VARCHAR}, #{fclientId,jdbcType=VARCHAR}, #{fclientSecret,jdbcType=VARCHAR}, 
+      #{fredirectUrls,jdbcType=VARCHAR}, #{fimportance,jdbcType=INTEGER}, #{fcreateTime,jdbcType=TIMESTAMP}, 
+      #{fcreator,jdbcType=VARCHAR}, #{fmodifyTime,jdbcType=TIMESTAMP}, #{fdeveloper,jdbcType=VARCHAR}, 
+      #{fstate,jdbcType=INTEGER}, #{freason,jdbcType=VARCHAR}, #{ftwiceLoginEnabled,jdbcType=INTEGER}, 
+      #{fexpireNotify,jdbcType=INTEGER}, #{fcheckEnabled,jdbcType=INTEGER}, #{fsign,jdbcType=VARCHAR}, 
+      #{fbackupAuditor,jdbcType=VARCHAR}, #{foaEnabled,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.family.auth.model.System">
+    update t_system
+    set Fname = #{fname,jdbcType=VARCHAR},
+      Fdescription = #{fdescription,jdbcType=VARCHAR},
+      Furl = #{furl,jdbcType=VARCHAR},
+      Fclient_id = #{fclientId,jdbcType=VARCHAR},
+      Fclient_secret = #{fclientSecret,jdbcType=VARCHAR},
+      Fredirect_urls = #{fredirectUrls,jdbcType=VARCHAR},
+      Fimportance = #{fimportance,jdbcType=INTEGER},
+      Fcreate_time = #{fcreateTime,jdbcType=TIMESTAMP},
+      Fcreator = #{fcreator,jdbcType=VARCHAR},
+      Fmodify_time = #{fmodifyTime,jdbcType=TIMESTAMP},
+      Fdeveloper = #{fdeveloper,jdbcType=VARCHAR},
+      Fstate = #{fstate,jdbcType=INTEGER},
+      Freason = #{freason,jdbcType=VARCHAR},
+      Ftwice_login_enabled = #{ftwiceLoginEnabled,jdbcType=INTEGER},
+      Fexpire_notify = #{fexpireNotify,jdbcType=INTEGER},
+      Fcheck_enabled = #{fcheckEnabled,jdbcType=INTEGER},
+      Fsign = #{fsign,jdbcType=VARCHAR},
+      Fbackup_auditor = #{fbackupAuditor,jdbcType=VARCHAR},
+      Foa_enabled = #{foaEnabled,jdbcType=INTEGER}
+    where Fid = #{fid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select Fid, Fname, Fdescription, Furl, Fclient_id, Fclient_secret, Fredirect_urls, 
+    Fimportance, Fcreate_time, Fcreator, Fmodify_time, Fdeveloper, Fstate, Freason, Ftwice_login_enabled, 
+    Fexpire_notify, Fcheck_enabled, Fsign, Fbackup_auditor, Foa_enabled
+    from t_system
+    where Fid = #{fid,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select Fid, Fname, Fdescription, Furl, Fclient_id, Fclient_secret, Fredirect_urls, 
+    Fimportance, Fcreate_time, Fcreator, Fmodify_time, Fdeveloper, Fstate, Freason, Ftwice_login_enabled, 
+    Fexpire_notify, Fcheck_enabled, Fsign, Fbackup_auditor, Foa_enabled
+    from t_system
+  </select>
+
+
+  <select id="findByClientId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select Fid, Fname, Fdescription, Furl, Fclient_id, Fclient_secret, Fredirect_urls,
+           Fimportance, Fcreate_time, Fcreator, Fmodify_time, Fdeveloper, Fstate, Freason, Ftwice_login_enabled,
+           Fexpire_notify, Fcheck_enabled, Fsign, Fbackup_auditor, Foa_enabled
+    from t_system
+    where Fclient_id = #{clientId,jdbcType=INTEGER}
+  </select>
+</mapper>

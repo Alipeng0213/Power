@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.family.auth.mvc.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.family.auth.model.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="wechat" jdbcType="VARCHAR" property="wechat" />
+    <result column="full_name" jdbcType="VARCHAR" property="fullName" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="sign" jdbcType="VARCHAR" property="sign" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modifier_by" jdbcType="VARCHAR" property="modifierBy" />
+    <result column="modifier_time" jdbcType="TIMESTAMP" property="modifierTime" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from f_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.family.auth.model.User">
+    insert into f_user (id, username, nickname, 
+      qq, wechat, full_name, 
+      email, phone, password, 
+      sign, status, create_by, 
+      create_time, modifier_by, modifier_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{sign,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{createBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifierBy,jdbcType=VARCHAR}, #{modifierTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.family.auth.model.User">
+    update f_user
+    set username = #{username,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      qq = #{qq,jdbcType=VARCHAR},
+      wechat = #{wechat,jdbcType=VARCHAR},
+      full_name = #{fullName,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modifier_by = #{modifierBy,jdbcType=VARCHAR},
+      modifier_time = #{modifierTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, username, nickname, qq, wechat, full_name, email, phone, password, sign, 
+    status, create_by, create_time, modifier_by, modifier_time
+    from f_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, username, nickname, qq, wechat, full_name, email, phone, password, sign,
+           status, create_by, create_time, modifier_by, modifier_time
+    from f_user
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, username, nickname, qq, wechat, full_name, email, phone, password, sign, 
+    status, create_by, create_time, modifier_by, modifier_time
+    from f_user
+  </select>
+</mapper>

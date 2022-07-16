@@ -1,8 +1,14 @@
 package com.family.auth.security.conf;
 
 
+import com.family.auth.core.ExceptionNotifier;
+import com.family.auth.security.client.ClientCredentialsTokenEndpointFilter;
+import com.family.auth.security.client.OAuth2ClientDetailsService;
+import com.family.auth.security.core.OAuth2ExceptionApiResultRenderer;
+import com.family.auth.security.core.OAuth2ResponseExceptionTranslator;
 import com.family.auth.security.oauth2.JwtEnhancer;
 import com.family.auth.security.oauth2.JwtStore;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,7 +17,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
+import org.springframework.security.oauth2.provider.error.OAuth2ExceptionRenderer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -31,15 +44,18 @@ class Oauth2AuthenticationServer extends AuthorizationServerConfigurerAdapter {
     @Resource
     JwtStore jwtStore;
 
+    @Resource
+    ExceptionNotifier exceptionNotifier;
+
+    @Resource
+    OAuth2ResponseExceptionTranslator exceptionTranslator;
+
+    @Resource
+    OAuth2ClientDetailsService oAuth2ClientDetailsService;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        //配置两个客户端,一个用于password认证一个用于client认证
-        clients.inMemory().withClient("client_1")
-                .resourceIds(DEMO_RESOURCE_ID)
-                .authorizedGrantTypes((String[]) allGrantTypes.toArray())
-                .scopes("select")
-                .authorities("client")
-                .secret("{noop}123456");
+        clients.withClientDetails(oAuth2ClientDetailsService);
     }
 
     @Override
@@ -49,21 +65,30 @@ class Oauth2AuthenticationServer extends AuthorizationServerConfigurerAdapter {
         tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
         tokenServices.setTokenEnhancer(new JwtEnhancer());
-        tokenServices.setAccessTokenValiditySeconds(5 * 60 * 60 * 12);// token有效期设置
-        tokenServices.setRefreshTokenValiditySeconds(5 * 60 * 60 * 12);// Refresh_token
+        tokenServices.setAccessTokenValiditySeconds(1000);// token有效期设置
+        tokenServices.setRefreshTokenValiditySeconds(1000);// Refresh_token
         tokenServices.setAuthenticationManager(authenticationManager);
 
         endpoints.pathMapping("/oauth/token", "/connect/token")
                 .tokenServices(tokenServices)
                 .authenticationManager(authenticationManager)
+                .exceptionTranslator(exceptionTranslator)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.allowFormAuthenticationForClients();
+
+        security.tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()");
+
+        security.addTokenEndpointAuthenticationFilter(clientCredentialsTokenEndpointFilter());
     }
 
-
+    ClientCredentialsTokenEndpointFilter clientCredentialsTokenEndpointFilter(){
+        ClientCredentialsTokenEndpointFilter endpointFilter = new ClientCredentialsTokenEndpointFilter(authenticationManager, exceptionTranslator , exceptionNotifier);
+        endpointFilter.afterPropertiesSet();
+        return endpointFilter;
+    }
 
 }

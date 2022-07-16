@@ -25,6 +25,10 @@ public class ApiResultFactory {
         return new ApiResult(40100, message);
     }
 
+    public static ApiResult accessDenied(String message) {
+        return new ApiResult(40300, message);
+    }
+
     public static ApiResult notFound() {
         return new ApiResult(40400, "not found");
     }

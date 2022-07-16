@@ -1,5 +1,8 @@
 package com.family.auth.security.conf;
 
+import com.family.auth.core.ExceptionNotifier;
+import com.family.auth.security.client.ClientCredentialsAuthenticationProvider;
+import com.family.auth.security.core.OAuth2ExceptionApiResultRenderer;
 import com.family.auth.security.core.PowerAuthenticationProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
+import org.springframework.security.oauth2.provider.error.OAuth2ExceptionRenderer;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import javax.annotation.Resource;
 
@@ -37,7 +46,11 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     @Resource
     PowerAuthenticationProvider powerAuthenticationProvider;
     @Resource
+    ClientCredentialsAuthenticationProvider clientCredentialsAuthenticationProvider;
+    @Resource
     ObjectMapper objectMapper;
+    @Resource
+    ExceptionNotifier exceptionNotifier;
 
 
     @Bean
@@ -50,11 +63,14 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
         http.csrf().disable().cors()
-                .and().formLogin().loginPage(LOGIN_PAGE)
                 .and().requestMatchers().anyRequest()
                 .and().authorizeRequests().antMatchers("/oauth/*").permitAll()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().headers().cacheControl();
+
+        http.exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint())
+                .accessDeniedHandler(accessDeniedHandler());
         // @formatter:on
     }
 
@@ -67,7 +83,26 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(powerAuthenticationProvider);
+        auth.authenticationProvider(powerAuthenticationProvider)
+                .authenticationProvider(clientCredentialsAuthenticationProvider);
+    }
+
+
+    private AccessDeniedHandler accessDeniedHandler() {
+        OAuth2AccessDeniedHandler accessDeniedHandler = new OAuth2AccessDeniedHandler();
+        accessDeniedHandler.setExceptionRenderer(exceptionRenderer());
+        return accessDeniedHandler;
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        OAuth2AuthenticationEntryPoint authenticationEntryPoint = new OAuth2AuthenticationEntryPoint();
+        authenticationEntryPoint.setExceptionRenderer(exceptionRenderer());
+        return authenticationEntryPoint;
+    }
+
+    private OAuth2ExceptionRenderer exceptionRenderer() {
+        return new OAuth2ExceptionApiResultRenderer(exceptionNotifier);
     }
 
 

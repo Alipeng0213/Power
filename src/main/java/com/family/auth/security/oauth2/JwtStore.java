@@ -33,7 +33,6 @@ public class JwtStore implements TokenStore {
     public OAuth2Authentication readAuthentication(String encoded) {
         try {
             Token token = JwtUtils.decode(encoded);
-
             return convert(token);
         } catch (Exception cause) {
             logger.error(cause.getMessage());
@@ -43,14 +42,19 @@ public class JwtStore implements TokenStore {
 
     @Override
     public OAuth2AccessToken readAccessToken(String encoded) {
-        Token token = JwtUtils.decode(encoded);
-        Claims claims = token.getClaims();
-        DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(encoded);
-        accessToken.setExpiration(claims.getExpiration());
-        Map<String, Object> info = new HashMap<>(claims);
-        info.put(Constant.TOKEN, token);
-        accessToken.setAdditionalInformation(info);
-        return accessToken;
+        try {
+            Token token = JwtUtils.decode(encoded);
+            Claims claims = token.getClaims();
+            DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(encoded);
+            accessToken.setExpiration(claims.getExpiration());
+            Map<String, Object> info = new HashMap<>(claims);
+            info.put(Constant.TOKEN, token);
+            accessToken.setAdditionalInformation(info);
+            return accessToken;
+        } catch (Exception cause) {
+            logger.error(cause.getMessage());
+            return null;
+        }
     }
 
     private OAuth2Authentication convert(Token token) {

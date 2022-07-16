@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 数据库驱动包位置 -->
+    <classPathEntry location="G:\maven\repository\mysql\mysql-connector-java\8.0.22\mysql-connector-java-8.0.22.jar" />
+    <context id="FA_AUTH_TABLES" targetRuntime="MyBatis3Simple">
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <!-- 数据库链接URL、用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://101.43.113.101:3306/fa_auth" userId="root" password="Swln4562302#">
+        </jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+        <!-- 生成模型的包名和位置 -->
+        <javaModelGenerator targetPackage="com.family.auth.model" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaModelGenerator>
+        <!-- 生成的映射文件包名和位置 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+        <!-- 生成DAO的包名和位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.family.auth.mvc.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+        <!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
+        <table tableName="t_system" domainObjectName="System" />
+    </context>
+</generatorConfiguration>

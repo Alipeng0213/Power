@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,18 +21,18 @@ public class JwtEnhancer implements TokenEnhancer {
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         DefaultOAuth2AccessToken result = new DefaultOAuth2AccessToken(accessToken);
         Map<String, Object> additional = new LinkedHashMap<>(accessToken.getAdditionalInformation());
+        Token token = convert(accessToken, authentication);
 
         Authentication user = authentication.getUserAuthentication();
         additional.put(Constant.USER, user.getPrincipal());
-        additional.put(Constant.EXPIRATION, result.getExpiration().getTime());
-        result.setAdditionalInformation(additional);
+        additional.put(Constant.EXPIRATION, token.getClaims().getExpiration().getTime());
         result.setRefreshToken(null);
-        result.setValue(convert(accessToken, authentication));
-
+        result.setAdditionalInformation(additional);
+        result.setValue(token.getEncoded());
         return result;
     }
 
-    public String convert(OAuth2AccessToken token, OAuth2Authentication authentication) {
+    public Token convert(OAuth2AccessToken token, OAuth2Authentication authentication) {
         OAuth2Request clientToken = authentication.getOAuth2Request();
 
         /*Header header = new Header();
@@ -55,6 +56,8 @@ public class JwtEnhancer implements TokenEnhancer {
         payload.setScopes(token.getScope());
         payload.setAttachment(attachment);*/
 
-        return JwtUtils.encode(clientToken.getClientId());
+        Map<String, Object> map = new HashMap<>(token.getAdditionalInformation());
+        map.put(Constant.CLIENT_ID, clientToken.getClientId());
+        return JwtUtils.encode(map);
     }
 }

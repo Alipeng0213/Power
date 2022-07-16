@@ -2,8 +2,10 @@ package com.family.auth.security.oauth2;
 
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.impl.DefaultClaims;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtils {
@@ -12,7 +14,7 @@ public class JwtUtils {
 
     public static final String APPSECRET = "asdasdqwe123";
 
-    public static final long EXPIRE = 1000 * 60 * 30; //过期时间，毫秒，30分钟
+    public static final long EXPIRE = 30 * 60 * 1000; //过期时间，毫秒，30分钟
 
     /**
      * 生成jwt token
@@ -20,14 +22,15 @@ public class JwtUtils {
      * @return
      */
 
-    public static String encode(String clientId) {
-        String token = Jwts.builder().setSubject(SUBJECT)
-                .claim("id", 123)
-                .setIssuedAt(new Date())
-                .claim("clientId", clientId)
-                .claim("clientIsss", 222)
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
+    public static Token encode(Map<String, Object> map) {
+        Claims claims = new DefaultClaims(map);
+        claims.setIssuedAt(new Date());
+        claims.setExpiration(new Date(System.currentTimeMillis() + EXPIRE));
+        claims.setSubject(SUBJECT);
+        String value = Jwts.builder().setSubject(SUBJECT)
+                .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, APPSECRET).compact();
+        Token token = new Token(value, claims);
         return token;
     }
 
