@@ -33,20 +33,13 @@ public class Oauth2ResourceServer extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
-        http
-                // Since we want the protected resources to be accessible in the UI as well we need
-                // session creation to be allowed (it's disabled by default in 2.0.6)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .requestMatchers().anyRequest()
-                .and()
-                .anonymous()
-                .and()
-                .authorizeRequests()
-                .anyRequest().authenticated();//配置order访问控制，必须认证过后才可以访问
-        // @formatter:on
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().requestMatchers().anyRequest()
+                .and().anonymous()
+                .and().authorizeRequests()
+                .anyRequest().authenticated();
     }
+
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resource) throws Exception {

@@ -7,29 +7,28 @@ package com.family.auth.security.oauth2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JwtEnhancer implements TokenEnhancer {
 
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        DefaultOAuth2AccessToken result = new DefaultOAuth2AccessToken(accessToken);
+        CustomAccessToken resultAccessToken = new CustomAccessToken(accessToken);
         Map<String, Object> additional = new LinkedHashMap<>(accessToken.getAdditionalInformation());
         Token token = convert(accessToken, authentication);
 
         Authentication user = authentication.getUserAuthentication();
         additional.put(Constant.USER, user.getPrincipal());
-        additional.put(Constant.EXPIRATION, token.getClaims().getExpiration().getTime());
-        result.setRefreshToken(null);
-        result.setAdditionalInformation(additional);
-        result.setValue(token.getEncoded());
-        return result;
+
+        resultAccessToken.setRefreshToken(null);
+        resultAccessToken.setAdditionalInformation(additional);
+        resultAccessToken.setValue(token.getEncoded());
+        return resultAccessToken;
     }
 
     public Token convert(OAuth2AccessToken token, OAuth2Authentication authentication) {

@@ -2,7 +2,7 @@ package com.family.auth.core;
 
 public class ApiResultFactory {
     public static <T> ApiResult succeed(T result) {
-        return new ApiResult<>(20000, "OK", result);
+        return new ApiResult<>(200, "OK", result);
     }
 
     public static ApiResult notContent() {

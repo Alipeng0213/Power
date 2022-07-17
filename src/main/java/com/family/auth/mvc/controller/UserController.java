@@ -17,10 +17,9 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public User getProduct(@PathVariable String username) {
+    public User getCurrentUser(@PathVariable String username) {
         return userService.getByUserName(username);
     }
-
 
 
 }

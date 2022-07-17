@@ -7,6 +7,7 @@ package com.family.auth.security.client;
 import com.family.auth.core.ApiResultException;
 import com.family.auth.core.ApiResultFactory;
 import com.family.auth.mvc.mapper.SystemMapper;
+import com.family.auth.utils.Json;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -17,6 +18,7 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import com.family.auth.model.System;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +61,7 @@ public class OAuth2ClientDetailsService implements ClientDetailsService {
                             throw new ApiResultException(ApiResultFactory.badClientId(String.format("The provided client_id: '%s' not found.", clientId)));
                         }
 
-                        /*List<String> redirectUrls = new ArrayList<>();
+                        List<String> redirectUrls = new ArrayList<>();
                         String json = system.getFredirectUrls();
                         if (StringUtils.hasText(json)) {
                             if (json.startsWith("[")) {
@@ -76,7 +78,7 @@ public class OAuth2ClientDetailsService implements ClientDetailsService {
 
                         // using system url if have none
                         if (redirectUrls.isEmpty()) {
-                            redirectUrls.add(system.getUrl());
+                            redirectUrls.add(system.getFurl());
                         }
 
                         List<String> scopes = new ArrayList<>();
@@ -85,13 +87,16 @@ public class OAuth2ClientDetailsService implements ClientDetailsService {
                         scopes.addAll(defaultScopes);
 
                         // add the configured scopes
-                        List<SystemScope> systemScopes = systemScopeDao.findAll(system.getId());
+                        /*List<SystemScope> systemScopes = systemScopeDao.findAll(system.getId());
                         if (systemScopes != null && !systemScopes.isEmpty()) {
                             scopes.addAll(systemScopes.stream().map(SystemScope::getScope).collect(Collectors.toList()));
                         }*/
 
                         return new ClientBuilder(clientId)
+                                .secret(system.getFclientSecret())
+                                .redirectUris(redirectUrls)
                                 .authorizedGrantTypes(allGrantTypes)
+                                .scopes(scopes)
                                 .autoApprove(true)
                                 .build();
                     }
