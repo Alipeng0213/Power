@@ -37,20 +37,14 @@ public class Oauth2ResourceServer extends ResourceServerConfigurerAdapter {
                 .and().requestMatchers().anyRequest()
                 .and().anonymous()
                 .and().authorizeRequests()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+        ;
     }
 
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resource) throws Exception {
-        resource.authenticationEntryPoint(authenticationEntryPoint())
-                .accessDeniedHandler(accessDeniedHandler());
-    }
-
-    private AccessDeniedHandler accessDeniedHandler() {
-        OAuth2AccessDeniedHandler accessDeniedHandler = new OAuth2AccessDeniedHandler();
-        accessDeniedHandler.setExceptionRenderer(exceptionRenderer());
-        return accessDeniedHandler;
+        resource.authenticationEntryPoint(authenticationEntryPoint());
     }
 
     public AuthenticationEntryPoint authenticationEntryPoint() {
@@ -58,9 +52,17 @@ public class Oauth2ResourceServer extends ResourceServerConfigurerAdapter {
         authenticationEntryPoint.setExceptionTranslator(exceptionTranslator);
         return authenticationEntryPoint;
     }
+/*
 
+
+    private AccessDeniedHandler accessDeniedHandler() {
+        OAuth2AccessDeniedHandler accessDeniedHandler = new OAuth2AccessDeniedHandler();
+        accessDeniedHandler.setExceptionRenderer(exceptionRenderer());
+        return accessDeniedHandler;
+    }
     private OAuth2ExceptionRenderer exceptionRenderer() {
         return new OAuth2ExceptionApiResultRenderer(exceptionNotifier);
     }
+*/
 
 }

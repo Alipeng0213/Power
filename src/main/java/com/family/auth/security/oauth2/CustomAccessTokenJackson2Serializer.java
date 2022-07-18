@@ -1,18 +1,18 @@
 package com.family.auth.security.oauth2;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public final class CustomAccessTokenJackson2Serializer extends StdSerializer<OAuth2AccessToken> {
 
@@ -21,21 +21,27 @@ public final class CustomAccessTokenJackson2Serializer extends StdSerializer<OAu
     }
 
     @Override
-    public void serialize(OAuth2AccessToken token, JsonGenerator jgen, SerializerProvider provider) throws IOException,
-            JsonGenerationException {
+    public void serialize(OAuth2AccessToken token, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         jgen.writeStartObject();
-        jgen.writeNumberField("code", HttpStatus.OK.value());
-        jgen.writeStringField(OAuth2AccessToken.ACCESS_TOKEN, token.getValue());
-        jgen.writeStringField(OAuth2AccessToken.TOKEN_TYPE, token.getTokenType());
-        OAuth2RefreshToken refreshToken = token.getRefreshToken();
+        CustomAccessToken customAccessToken = (CustomAccessToken) token;
+
+        ResponseEntity responseEntity = ResponseEntity.builder()
+                .access_token(customAccessToken.getValue())
+                .token_type(customAccessToken.getTokenType())
+                .user(customAccessToken.getUser())
+                .client_id(customAccessToken.getClient_id())
+                .build();
+        OAuth2RefreshToken refreshToken = customAccessToken.getRefreshToken();
         if (refreshToken != null) {
-            jgen.writeStringField(OAuth2AccessToken.REFRESH_TOKEN, refreshToken.getValue());
+            responseEntity.setRefresh_token(refreshToken.getValue());
         }
-        Date expiration = token.getExpiration();
+
+        Date expiration = customAccessToken.getExpiration();
         if (expiration != null) {
-            jgen.writeNumberField(CustomAccessToken.EXPIRATION, expiration.getTime());
+            responseEntity.setExpiration(expiration.getTime());
         }
-        Set<String> scope = token.getScope();
+
+        Set<String> scope = customAccessToken.getScope();
         if (scope != null && !scope.isEmpty()) {
             StringBuffer scopes = new StringBuffer();
             for (String s : scope) {
@@ -43,13 +49,32 @@ public final class CustomAccessTokenJackson2Serializer extends StdSerializer<OAu
                 scopes.append(s);
                 scopes.append(" ");
             }
-            jgen.writeStringField(OAuth2AccessToken.SCOPE, scopes.substring(0, scopes.length() - 1));
+            responseEntity.setScope(scopes.substring(0, scopes.length() - 1));
         }
-        Map<String, Object> additionalInformation = token.getAdditionalInformation();
-        for (String key : additionalInformation.keySet()) {
-            jgen.writeObjectField(key, additionalInformation.get(key));
-        }
+
+        jgen.writeNumberField("code", HttpStatus.OK.value());
+        jgen.writeObjectField("data", responseEntity);
+
         jgen.writeEndObject();
     }
 
+    @Data
+    @Builder
+    static class ResponseEntity {
+
+        String access_token;
+
+        String token_type;
+
+        String refresh_token;
+
+        long expiration;
+
+        String scope;
+
+        String client_id;
+
+        Object user;
+
+    }
 }

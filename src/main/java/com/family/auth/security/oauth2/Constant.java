@@ -7,6 +7,8 @@ public class Constant {
 
     static final String USER = "user";
 
-    static final String CLIENT_ID = "clientId";
+    static final String CLIENT_ID = "client_id";
+
+    static final String CLIENT_SECRET = "client_secret";
 
 }

@@ -7,14 +7,13 @@ import io.jsonwebtoken.impl.DefaultClaims;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class JwtUtils {
 
     public static final String SUBJECT = "Alipeng";
 
-    public static final String APPSECRET = "asdasdqwe123";
-
-    public static final long EXPIRE = 30 * 60 * 1000; //过期时间，毫秒，30分钟
+    public static final String APPSECRET = "6675CB7039B34EEBB5F0DD3B458F924B";
 
     /**
      * 生成jwt token
@@ -22,10 +21,10 @@ public class JwtUtils {
      * @return
      */
 
-    public static Token encode(Map<String, Object> map) {
+    public static Token encode(Map<String, Object> map, long expire) {
         Claims claims = new DefaultClaims(map);
         claims.setIssuedAt(new Date());
-        claims.setExpiration(new Date(System.currentTimeMillis() + EXPIRE));
+        claims.setExpiration(new Date(System.currentTimeMillis() + expire));
         claims.setSubject(SUBJECT);
         String value = Jwts.builder().setSubject(SUBJECT)
                 .setClaims(claims)

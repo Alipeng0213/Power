@@ -6,15 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.common.DefaultThrowableAnalyzer;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
-import org.springframework.security.web.util.ThrowableAnalyzer;
 
 
 @Configuration
 public class OAuth2ResponseExceptionTranslator extends DefaultWebResponseExceptionTranslator {
-    private ThrowableAnalyzer throwableAnalyzer = new DefaultThrowableAnalyzer();
+
 
     @Override
     public ResponseEntity translate(Exception e) throws Exception {

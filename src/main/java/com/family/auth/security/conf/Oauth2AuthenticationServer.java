@@ -6,6 +6,7 @@ import com.family.auth.security.client.ClientCredentialsTokenEndpointFilter;
 import com.family.auth.security.client.OAuth2ClientDetailsService;
 import com.family.auth.security.core.OAuth2ExceptionApiResultRenderer;
 import com.family.auth.security.core.OAuth2ResponseExceptionTranslator;
+import com.family.auth.security.core.OAuth2TokenService;
 import com.family.auth.security.oauth2.JwtEnhancer;
 import com.family.auth.security.oauth2.JwtStore;
 import org.springframework.context.annotation.Bean;
@@ -60,13 +61,11 @@ class Oauth2AuthenticationServer extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenStore(jwtStore);
+        OAuth2TokenService tokenServices = new OAuth2TokenService(jwtStore, new JwtEnhancer());
         tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
-        tokenServices.setTokenEnhancer(new JwtEnhancer());
-        tokenServices.setAccessTokenValiditySeconds(1000);// token有效期设置
-        tokenServices.setRefreshTokenValiditySeconds(1000);// Refresh_token
+        tokenServices.setAccessTokenValiditySeconds(2 * 60 * 60 * 1000);// token有效期设置
+        tokenServices.setRefreshTokenValiditySeconds(24 * 60 * 60 * 1000);// Refresh_token
         tokenServices.setAuthenticationManager(authenticationManager);
 
         endpoints.pathMapping("/oauth/token", "/connect/token")
