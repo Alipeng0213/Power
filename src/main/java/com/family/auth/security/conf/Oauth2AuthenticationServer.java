@@ -7,6 +7,7 @@ import com.family.auth.security.core.OAuth2ClientDetailsService;
 import com.family.auth.security.core.OAuth2ResponseExceptionTranslator;
 import com.family.auth.security.token.JwtEnhancer;
 import com.family.auth.security.token.JwtStore;
+import com.family.auth.security.token.OAuth2TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,8 +17,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import javax.annotation.Resource;
 import java.util.Arrays;

@@ -1,6 +1,7 @@
 package com.family.auth.security.conf;
 
 import com.family.auth.core.ExceptionNotifier;
+import com.family.auth.security.authentication.PreAuthenticatedAuthenticationProvider;
 import com.family.auth.security.client.ClientCredentialsAuthenticationProvider;
 import com.family.auth.security.core.OAuth2ExceptionApiResultRenderer;
 import com.family.auth.security.authentication.PowerAuthenticationProvider;
@@ -44,10 +45,16 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 
     @Resource
     PowerAuthenticationProvider powerAuthenticationProvider;
+
     @Resource
     ClientCredentialsAuthenticationProvider clientCredentialsAuthenticationProvider;
+
+    @Resource
+    PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider;
+
     @Resource
     ObjectMapper objectMapper;
+
     @Resource
     ExceptionNotifier exceptionNotifier;
 
@@ -83,7 +90,8 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(powerAuthenticationProvider)
-                .authenticationProvider(clientCredentialsAuthenticationProvider);
+                .authenticationProvider(clientCredentialsAuthenticationProvider)
+                .authenticationProvider(preAuthenticatedAuthenticationProvider);
     }
 
 

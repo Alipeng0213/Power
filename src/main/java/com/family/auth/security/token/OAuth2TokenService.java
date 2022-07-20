@@ -1,13 +1,20 @@
-package com.family.auth.security.conf;
+package com.family.auth.security.token;
 
+import com.family.auth.security.token.Constant;
+import com.family.auth.security.token.JwtUtils;
+import com.family.auth.security.token.Token;
+import com.sun.security.auth.UserPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.*;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class OAuth2TokenService extends DefaultTokenServices {
@@ -74,7 +81,6 @@ public class OAuth2TokenService extends DefaultTokenServices {
         token.setRefreshToken(refreshToken);
         token.setScope(authentication.getOAuth2Request().getScope());
 
-
         return tokenEnhancer != null ? tokenEnhancer.enhance(token, authentication) : token;
     }
 
@@ -82,12 +88,17 @@ public class OAuth2TokenService extends DefaultTokenServices {
         if (!isSupportRefreshToken(authentication.getOAuth2Request())) {
             return null;
         }
-        int validitySeconds = getRefreshTokenValiditySeconds(authentication.getOAuth2Request());
-        String value = UUID.randomUUID().toString();
-        if (validitySeconds > 0) {
-            return new DefaultExpiringOAuth2RefreshToken(value, new Date(System.currentTimeMillis()
-                    + (validitySeconds * 1000L)));
-        }
-        return new DefaultOAuth2RefreshToken(value);
+        Authentication user = authentication.getUserAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) user.getPrincipal();
+
+        OAuth2Request clientToken = authentication.getOAuth2Request();
+
+        long validitySeconds = getRefreshTokenValiditySeconds(authentication.getOAuth2Request());
+        if (validitySeconds <= 0) { validitySeconds = 24 * 60 * 60; }
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(Constant.CLIENT_ID, clientToken.getClientId());
+        Token token = JwtUtils.encode(userPrincipal.getName(), map, validitySeconds * 1000L);
+        return new DefaultExpiringOAuth2RefreshToken(token.getEncoded(), token.getClaims().getExpiration());
     }
 }

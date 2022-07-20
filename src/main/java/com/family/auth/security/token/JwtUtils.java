@@ -9,8 +9,6 @@ import java.util.Map;
 
 public class JwtUtils {
 
-    public static final String SUBJECT = "Alipeng";
-
     public static final String APPSECRET = "6675CB7039B34EEBB5F0DD3B458F924B";
 
     /**
@@ -19,12 +17,12 @@ public class JwtUtils {
      * @return
      */
 
-    public static Token encode(Map<String, Object> map, long expire) {
+    public static Token encode(String name, Map<String, Object> map, long expire) {
         Claims claims = new DefaultClaims(map);
         claims.setIssuedAt(new Date());
         claims.setExpiration(new Date(System.currentTimeMillis() + expire));
-        claims.setSubject(SUBJECT);
-        String value = Jwts.builder().setSubject(SUBJECT)
+        claims.setSubject(name);
+        String value = Jwts.builder().setSubject(name)
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, APPSECRET).compact();
         Token token = new Token(value, claims);

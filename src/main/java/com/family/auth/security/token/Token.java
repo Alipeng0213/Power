@@ -2,6 +2,7 @@ package com.family.auth.security.token;
 
 import io.jsonwebtoken.Claims;
 import lombok.Data;
+import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 
 @Data
 public class Token {
