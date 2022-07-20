@@ -2,19 +2,19 @@
  * Copyright (c) 2018-2019 yingtingxu(徐应庭). All rights reserved.
  */
 
-package com.family.auth.security.oauth2;
+package com.family.auth.security.token;
 
+import com.family.auth.security.core.CustomAccessToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import java.util.*;
 
-public class JwtEnhancer implements TokenEnhancer {
+public class JwtEnhancer extends JwtAccessTokenConverter {
 
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -29,27 +29,6 @@ public class JwtEnhancer implements TokenEnhancer {
 
     public Token convert(OAuth2AccessToken token, OAuth2Authentication authentication) {
         OAuth2Request clientToken = authentication.getOAuth2Request();
-        /*Header header = new Header();
-        header.setTtl(token.getExpiresIn());
-        header.setIssuedAt(Instant.now().toEpochMilli());
-        Payload payload = new Payload();
-        Map<String, Object> attachment = new LinkedHashMap<>(token.getAdditionalInformation());
-
-        // client_id for indicating issue to who
-        attachment.put(WellKnown.clientId, clientToken.getClientId());
-
-        if (authentication.isClientOnly()) {
-            header.setKind(TokenKind.CLIENT);
-            header.setSubject(clientToken.getClientId());
-        } else {
-            header.setSubject(authentication.getUserAuthentication().getName());
-            // for backward compatibility
-            attachment.put(WellKnown.username, authentication.getName());
-        }
-
-        payload.setScopes(token.getScope());
-        payload.setAttachment(attachment);*/
-
         Map<String, Object> map = new HashMap<>(token.getAdditionalInformation());
         map.put(Constant.CLIENT_ID, clientToken.getClientId());
         return JwtUtils.encode(map, token.getExpiresIn());

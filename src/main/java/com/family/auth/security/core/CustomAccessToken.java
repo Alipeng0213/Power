@@ -1,4 +1,4 @@
-package com.family.auth.security.oauth2;
+package com.family.auth.security.core;
 
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -11,19 +11,19 @@ public class CustomAccessToken extends DefaultOAuth2AccessToken {
 
     private Object user;
 
-    protected String getClient_id() {
+    public String getClient_id() {
         return client_id;
     }
 
-    protected void setClient_id(String client_id) {
+    public void setClient_id(String client_id) {
         this.client_id = client_id;
     }
 
-    protected Object getUser() {
+    public Object getUser() {
         return user;
     }
 
-    protected void setUser(Object user) {
+    public void setUser(Object user) {
         this.user = user;
     }
 

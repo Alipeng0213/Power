@@ -1,13 +1,11 @@
-package com.family.auth.security.oauth2;
+package com.family.auth.security.token;
 
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.DefaultClaims;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class JwtUtils {
 

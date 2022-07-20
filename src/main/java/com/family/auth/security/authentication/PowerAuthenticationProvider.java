@@ -1,4 +1,4 @@
-package com.family.auth.security.core;
+package com.family.auth.security.authentication;
 
 
 import com.alibaba.druid.util.StringUtils;

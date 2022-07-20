@@ -2,7 +2,7 @@
  * Copyright (c) 2019 yingtingxu(徐应庭). All rights reserved.
  */
 
-package com.family.auth.security.client;
+package com.family.auth.security.core;
 
 import com.family.auth.core.ApiResultException;
 import com.family.auth.core.ApiResultFactory;

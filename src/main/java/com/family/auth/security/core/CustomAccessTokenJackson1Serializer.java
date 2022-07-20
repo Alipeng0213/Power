@@ -1,4 +1,4 @@
-package com.family.auth.security.oauth2;
+package com.family.auth.security.core;
 
 import lombok.Builder;
 import lombok.Data;

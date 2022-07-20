@@ -1,4 +1,4 @@
-package com.family.auth.security.oauth2;
+package com.family.auth.security.token;
 
 import io.jsonwebtoken.Claims;
 import lombok.Data;

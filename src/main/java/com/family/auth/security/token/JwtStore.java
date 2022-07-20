@@ -1,11 +1,10 @@
-package com.family.auth.security.oauth2;
+package com.family.auth.security.token;
 
-import com.family.auth.security.core.PluginAuthenticationToken;
+import com.family.auth.security.authentication.PluginAuthenticationToken;
 import com.sun.security.auth.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Component
+//@Component
 public class JwtStore implements TokenStore {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -91,6 +90,7 @@ public class JwtStore implements TokenStore {
 
     @Override
     public OAuth2RefreshToken readRefreshToken(String tokenValue) {
+
         return null;
     }
 

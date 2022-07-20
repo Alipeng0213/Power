@@ -2,7 +2,7 @@
  * Copyright (c) 2019 yingtingxu(徐应庭). All rights reserved.
  */
 
-package com.family.auth.security.core;
+package com.family.auth.security.authentication;
 
 import com.sun.security.auth.UserPrincipal;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

@@ -1,4 +1,4 @@
-package com.family.auth.security.oauth2;
+package com.family.auth.security.core;
 
 
 import com.fasterxml.jackson.core.JsonGenerator;

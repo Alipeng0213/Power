@@ -1,4 +1,4 @@
-package com.family.auth.security.oauth2;
+package com.family.auth.security.token;
 
 public enum TokenKind {
     USER, CLIENT;
