@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -17,8 +18,8 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public User getCurrentUser(@PathVariable String username) {
-        return userService.getByUserName(username);
+    public User getCurrentUser(HttpServletRequest request) {
+        return userService.getByUserName(request.getUserPrincipal().getName());
     }
 
 

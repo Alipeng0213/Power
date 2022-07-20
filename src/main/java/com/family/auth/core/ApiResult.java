@@ -1,5 +1,9 @@
 package com.family.auth.core;
 
+
+
+@org.codehaus.jackson.map.annotate.JsonSerialize(using = ApiResultJackson1Serializer.class)
+@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ApiResultJackson2Serializer.class)
 public class ApiResult<T> {
 
     private int code;
