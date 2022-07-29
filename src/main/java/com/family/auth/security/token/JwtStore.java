@@ -88,8 +88,10 @@ public class JwtStore implements TokenStore {
     }
 
     @Override
-    public void removeAccessToken(OAuth2AccessToken token) {
-
+    public void removeAccessToken(OAuth2AccessToken accessToken) {
+        String value = accessToken.getValue();
+        Token token = JwtUtils.decode(value);
+        logger.debug("now remove access_token Principal: 【{}】", token.getClaims().getSubject());
     }
 
     @Override

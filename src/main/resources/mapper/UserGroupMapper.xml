@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.family.auth.mvc.mapper.UserGroupMapper">
+  <resultMap id="BaseResultMap" type="com.family.auth.model.UserGroup">
+    <id column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="members" jdbcType="VARCHAR" property="members" />
+  </resultMap>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select group_id, group_name, description, create_by, create_time, modifier, modify_time,
+           members
+    from user_group
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByGroupIdSet" parameterType="java.util.Set" resultMap="BaseResultMap">
+    select group_id, group_name, description, create_by, create_time, modifier, modify_time,
+           members
+    from user_group
+    where group_id IN (
+      <foreach collection="idSet" item="groupId" separator=",">
+        #{groupId, jdbcType=INTEGER}
+      </foreach>
+    )
+  </select>
+
+</mapper>

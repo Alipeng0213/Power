@@ -1,21 +1,15 @@
 package com.family.auth.security.conf;
 
 import com.family.auth.core.ExceptionNotifier;
-import com.family.auth.security.core.OAuth2ExceptionApiResultRenderer;
 import com.family.auth.security.core.OAuth2ResponseExceptionTranslator;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
-import org.springframework.security.oauth2.provider.error.OAuth2ExceptionRenderer;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
 
 import javax.annotation.Resource;
 
@@ -25,9 +19,6 @@ public class Oauth2ResourceServer extends ResourceServerConfigurerAdapter {
 
 
     @Resource
-    ExceptionNotifier exceptionNotifier;
-
-    @Resource
     OAuth2ResponseExceptionTranslator exceptionTranslator;
 
 
@@ -35,10 +26,10 @@ public class Oauth2ResourceServer extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().requestMatchers().anyRequest()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and().anonymous()
                 .and().authorizeRequests()
-                .anyRequest().authenticated()
-        ;
+                .anyRequest().authenticated();
     }
 
 

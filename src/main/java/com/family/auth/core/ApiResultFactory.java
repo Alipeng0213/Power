@@ -21,10 +21,6 @@ public class ApiResultFactory {
         return new ApiResult(40000, message);
     }
 
-    public static ApiResult unauthorized(String message) {
-        return new ApiResult(40100, message);
-    }
-
     public static ApiResult accessDenied(String message) {
         return new ApiResult(40300, message);
     }

@@ -1,4 +1,4 @@
-package com.family.auth.model;
+package com.family.auth.mvc.dto;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class User {
+public class UserDto {
 
     private Integer userId;
 
@@ -40,6 +40,6 @@ public class User {
 
     private Date modifierTime;
 
-    List<UserGroup> userGroups;
+    List<UserGroupDto> userGroups;
 
 }

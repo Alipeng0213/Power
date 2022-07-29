@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.family.auth.mvc.mapper.ConsumptionTypeMapper">
+  <resultMap id="BaseResultMap" type="com.family.auth.model.ConsumptionType">
+    <id column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="parent_type_id" jdbcType="INTEGER" property="parentTypeId" />
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    <result column="owner" jdbcType="VARCHAR" property="owner" />
+    <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="is_readonly" jdbcType="TINYINT" property="isReadonly" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="use_area" jdbcType="BIT" property="useArea" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from consumption_type
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.family.auth.model.ConsumptionType">
+    insert into consumption_type (type_id, parent_type_id, type_name, 
+      owner, group_id, status, 
+      is_readonly, create_by, create_time, 
+      modifier, modify_time, use_area
+      )
+    values (#{typeId,jdbcType=INTEGER}, #{parentTypeId,jdbcType=INTEGER}, #{typeName,jdbcType=VARCHAR}, 
+      #{owner,jdbcType=VARCHAR}, #{groupId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{isReadonly,jdbcType=TINYINT}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifier,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{useArea,jdbcType=BIT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.family.auth.model.ConsumptionType">
+    update consumption_type
+    set parent_type_id = #{parentTypeId,jdbcType=INTEGER},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      owner = #{owner,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      is_readonly = #{isReadonly,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      use_area = #{useArea,jdbcType=BIT}
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select type_id, parent_type_id, type_name, owner, group_id, status, is_readonly, 
+    create_by, create_time, modifier, modify_time, use_area
+    from consumption_type
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select type_id, parent_type_id, type_name, owner, group_id, status, is_readonly, 
+    create_by, create_time, modifier, modify_time, use_area
+    from consumption_type
+  </select>
+</mapper>
